@@ -6,16 +6,16 @@
   <title>Nosso Amor</title>
   <style>
     body {
-  font-family: Arial, sans-serif;
-  background-image: url('fundo.jpg'); /* Caminho da imagem */
-  background-size: cover;             /* Cobre toda a tela */
-  background-position: center;        /* Centraliza a imagem */
-  background-attachment: fixed;       /* Fixa o fundo ao rolar */
-  text-align: center;
-  padding: 20px;
-  overflow-x: hidden;
-  position: relative;
-}
+      font-family: Arial, sans-serif;
+      background-image: url('fundo.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
 
     h1 {
       color: #c71585;
@@ -33,6 +33,7 @@
       overflow: hidden;
       box-shadow: 0 0 15px #0004;
       position: relative;
+      height: auto;
     }
 
     .slideshow-container img {
@@ -78,7 +79,6 @@
       width: 300px;
     }
 
-    /* Corações caindo */
     .heart {
       position: fixed;
       top: -30px;
@@ -92,17 +92,10 @@
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
     }
 
-    /* Corações batendo espalhados nas laterais */
     .pulsing-heart {
       position: fixed;
       font-size: 30px;
@@ -113,53 +106,52 @@
     }
 
     @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+        font-size: 14px;
       }
-      50% {
-        transform: scale(1.4);
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .contador {
+        font-size: 1.2em;
+      }
+
+      .slideshow-container {
+        max-width: 90vw;
+      }
+
+      .slideshow-container img {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      .slideshow-container img:not(.active) {
+        display: none !important;
+      }
+
+      .btns {
+        margin-top: 15px;
+      }
+
+      button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+      }
+
+      audio {
+        width: 100% !important;
+        max-width: 300px;
       }
     }
-    @media (max-width: 480px) {
-  body {
-    padding: 10px;
-    font-size: 14px; /* Fonte um pouco menor */
-  }
-
-  h1 {
-    font-size: 1.5em;
-  }
-
-  .contador {
-    font-size: 1.2em;
-  }
-
-  .slideshow-container {
-    max-width: 90vw; /* Usar quase toda largura da tela */
-    height: auto;
-  }
-
-  .slideshow-container img {
-    position: relative !important; /* Para que a imagem fique normal e não sobreposta */
-    width: 100% !important;
-    height: auto !important;
-    opacity: 1 !important;
-  }
-
-  .btns {
-    margin-top: 15px;
-  }
-
-  button {
-    padding: 8px 12px;
-    font-size: 0.9em;
-  }
-
-  audio {
-    width: 100% !important; /* Audio fica adaptado à largura da tela */
-    max-width: 300px; /* opcional para não ficar enorme em telas grandes */
-  }
-}
   </style>
 </head>
 <body>
@@ -176,13 +168,11 @@
   <div class="contador" id="contador"></div>
 
   <p>Desde o nosso primeiro dia juntos, você me fez o homem mais feliz do mundo.</p>
-</p>Você é o meu porto seguro, minha paz no meio do caos, minha alegria nos dias comuns.</p>
-</p>Você não é só parte da minha vida. Você é a razão do meu melhor sorriso.</p>
+  <p>Você é o meu porto seguro, minha paz no meio do caos, minha alegria nos dias comuns.</p>
+  <p>Você não é só parte da minha vida. Você é a razão do meu melhor sorriso.</p>
 
-  <div class="slideshow-container" id="slideshow">
-    <img src="foto1.jpg" class="active" alt="Foto do casal" />
-    <img src="foto2.jpg" alt="Foto do casal" />
-  </div>
+  <!-- SLIDESHOW sem imagens fixas -->
+  <div class="slideshow-container" id="slideshow"></div>
 
   <div class="btns">
     <button id="prevBtn">⬅ Anterior</button>
@@ -201,7 +191,6 @@
 
     function atualizarContador() {
       const agora = new Date();
-
       let anos = agora.getFullYear() - dataInicio.getFullYear();
       let meses = agora.getMonth() - dataInicio.getMonth();
       let dias = agora.getDate() - dataInicio.getDate();
@@ -221,11 +210,9 @@
       const diasTxt = dias > 0 ? `${dias} dia${dias > 1 ? "s" : ""}` : "";
 
       let texto = "";
-
       if (anos > 0) texto += anosTxt;
       if (meses > 0) texto += (texto ? ", " : "") + mesesTxt;
       if (dias > 0) texto += (texto ? " e " : "") + diasTxt;
-
       if (!texto) texto = "Hoje é o primeiro dia!";
 
       contador.innerHTML = `Você me completa há <strong>${texto}</strong>!`;
@@ -246,12 +233,18 @@
     ];
     const slideshow = document.getElementById("slideshow");
     let currentIndex = 0;
-    const imgs = slideshow.getElementsByTagName("img");
 
-    imgs[0].src = fotos[0];
-    imgs[0].classList.add("active");
-    imgs[1].src = fotos[1];
+    const img1 = document.createElement("img");
+    const img2 = document.createElement("img");
 
+    img1.classList.add("active");
+    img1.src = fotos[0];
+    img2.src = fotos[1];
+
+    slideshow.appendChild(img1);
+    slideshow.appendChild(img2);
+
+    const imgs = [img1, img2];
     let showingFirst = true;
     let intervalId;
 
@@ -313,13 +306,15 @@
 
     setInterval(criarCoracao, 300);
 
-    // Faz a musica iniciar automaticamente
-   window.addEventListener('load', () => {
-  const audio = document.querySelector('audio');
-  if (audio) {
-    audio.play().catch(() => {
-      console.log('Autoplay bloqueado, será necessário interação do usuário para tocar o áudio.');
+    // Toca música automaticamente
+    window.addEventListener('load', () => {
+      const audio = document.querySelector('audio');
+      if (audio) {
+        audio.play().catch(() => {
+          console.log('Autoplay bloqueado, será necessário interação do usuário para tocar o áudio.');
+        });
+      }
     });
-  }
-});
   </script>
+</body>
+</html>
