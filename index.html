@@ -120,6 +120,46 @@
         transform: scale(1.4);
       }
     }
+    @media (max-width: 480px) {
+  body {
+    padding: 10px;
+    font-size: 14px; /* Fonte um pouco menor */
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .contador {
+    font-size: 1.2em;
+  }
+
+  .slideshow-container {
+    max-width: 90vw; /* Usar quase toda largura da tela */
+    height: auto;
+  }
+
+  .slideshow-container img {
+    position: relative !important; /* Para que a imagem fique normal e não sobreposta */
+    width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+  }
+
+  .btns {
+    margin-top: 15px;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  audio {
+    width: 100% !important; /* Audio fica adaptado à largura da tela */
+    max-width: 300px; /* opcional para não ficar enorme em telas grandes */
+  }
+}
   </style>
 </head>
 <body>
@@ -272,6 +312,14 @@
     }
 
     setInterval(criarCoracao, 300);
+
+    // Faz a musica iniciar automaticamente
+   window.addEventListener('load', () => {
+  const audio = document.querySelector('audio');
+  if (audio) {
+    audio.play().catch(() => {
+      console.log('Autoplay bloqueado, será necessário interação do usuário para tocar o áudio.');
+    });
+  }
+});
   </script>
-</body>
-</html>
